@@ -106,7 +106,7 @@ export async function GET(req: Request) {
       }"/><stop offset="100%" stop-color="#${(gradient || '').split(',')[1] || '000000'}"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#g1)"/>`
     : `<rect width="100%" height="100%" fill="#${bg}"/>`
 
-  const svg = `<?xml version="1.0" encoding="UTF-8"?>\n  <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">\n    ${bgEl}\n    ${content}\n  </svg>`
+  const svg = `<?xml version="1.0" encoding="UTF-8"?>\n  <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">\n    <style>text { font-family: Arial, sans-serif !important; }</style>\n    ${bgEl}\n    ${content}\n  </svg>`
 
   const headers = {
     'Content-Type': 'image/svg+xml',
