@@ -1,0 +1,10 @@
+{
+  "functions": {
+    "api/**": {
+      "runtime": "edge"
+    }
+  },
+  "rewrites": [
+    { "source": "/api/countdown.svg", "destination": "/api/countdown.svg" }
+  ]
+}
