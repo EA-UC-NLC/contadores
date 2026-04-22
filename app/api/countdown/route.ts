@@ -14,7 +14,7 @@ export async function GET(req: Request) {
   const dateParam = p.get('date') || ''
   const bg = p.get('bg') || 'ffffff'
   const color = p.get('color') || '000000'
-  const fontFamily = p.get('fontFamily') || 'Arial'
+  const fontFamily = p.get('font') || 'Arial, sans-serif'
   const fontSize = Number(p.get('fontSize') || '48')
   const labelSize = Number(p.get('labelSize') || '14')
   const width = Number(p.get('width') || '600')
@@ -106,7 +106,7 @@ export async function GET(req: Request) {
       }"/><stop offset="100%" stop-color="#${(gradient || '').split(',')[1] || '000000'}"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#g1)"/>`
     : `<rect width="100%" height="100%" fill="#${bg}"/>`
 
-  const svg = `<?xml version="1.0" encoding="UTF-8"?>\n  <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">\n    <style>text { font-family: Arial, sans-serif !important; }</style>\n    ${bgEl}\n    ${content}\n  </svg>`
+  const svg = `<?xml version="1.0" encoding="UTF-8"?>\n  <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">\n    ${bgEl}\n    ${content}\n  </svg>`
 
   const headers = {
     'Content-Type': 'image/svg+xml',

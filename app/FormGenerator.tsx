@@ -1,6 +1,16 @@
 "use client";
 import { useState } from "react";
 
+const FONT_OPTIONS = [
+  { label: "Arial", value: "Arial, sans-serif" },
+  { label: "Verdana", value: "Verdana, Geneva, sans-serif" },
+  { label: "Times New Roman", value: "'Times New Roman', Times, serif" },
+  { label: "Courier New", value: "'Courier New', Courier, monospace" },
+  { label: "Georgia", value: "Georgia, serif" },
+  { label: "Tahoma", value: "Tahoma, Geneva, sans-serif" },
+  { label: "Impact", value: "Impact, Charcoal, sans-serif" },
+];
+
 export default function FormGenerator() {
   const [date, setDate] = useState("2026-12-25T00:00:00");
   const [title, setTitle] = useState("Navidad");
@@ -8,11 +18,12 @@ export default function FormGenerator() {
   const [color, setColor] = useState("000000");
   const [width, setWidth] = useState("600");
   const [height, setHeight] = useState("200");
+  const [font, setFont] = useState(FONT_OPTIONS[0].value);
 
-  const url = `https://contadores-sigma.vercel.app/api/countdown?date=${encodeURIComponent(
+  const url = `/api/countdown?date=${encodeURIComponent(
     date
-  )}&title=${encodeURIComponent(title)}&bg=${bg}&color=${color}&width=${width}&height=${height}`;
-  const htmlSnippet = `<img src=\"${url}\" alt=\"Contador regresivo\" width=\"${width}\">`;
+  )}&title=${encodeURIComponent(title)}&bg=${bg.replace('#','')}&color=${color.replace('#','')}&width=${width}&height=${height}&font=${encodeURIComponent(font)}`;
+  const htmlSnippet = `<img src="https://contadores-sigma.vercel.app${url}" alt="Contador regresivo" width="${width}">`;
 
   return (
     <div style={{marginBottom: 24, background: '#f9f9f9', padding: 16, borderRadius: 8}}>
@@ -35,6 +46,12 @@ export default function FormGenerator() {
         <label>Alto:<br/>
           <input type="number" value={height} min={50} max={600} onChange={e=>setHeight(e.target.value)} style={{marginBottom:8}} /> px
         </label><br/>
+        <label style={{ display: 'block', margin: '12px 0 4px' }}>Fuente:</label>
+        <select value={font} onChange={e => setFont(e.target.value)} style={{ width: '100%', padding: 6 }}>
+          {FONT_OPTIONS.map(opt => (
+            <option key={opt.value} value={opt.value}>{opt.label}</option>
+          ))}
+        </select>
       </form>
       <h2>Vista previa:</h2>
       <img src={url} alt="Contador regresivo" width={width} height={height} style={{border:'1px solid #ccc',marginBottom:20}} />
