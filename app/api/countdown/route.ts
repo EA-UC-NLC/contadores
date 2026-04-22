@@ -27,10 +27,12 @@ export async function GET(req: Request) {
   const showMinutes = p.get('showMinutes') !== 'false'
   const showSeconds = p.get('showSeconds') !== 'false'
   const layout = p.get('layout') || 'horizontal'
+  const borderRadius = Number(p.get('borderRadius') || 16)
   const separator = p.get('separator') !== 'false'
   const expiredMsg = p.get('expiredMsg') || (lang === 'es' ? 'Evento finalizado' : 'Event ended')
   const timezone = p.get('timezone') || 'America/Santiago'
   const gradient = p.get('gradient')
+  const image = p.get('image')
 
   // Usar Date nativo en vez de luxon
   const target = new Date(dateParam)
@@ -75,7 +77,7 @@ export async function GET(req: Request) {
       const labelY = numY + fontSize / 2
       items.push(`
         <g>
-          <rect x="${x}" y="${y}" width="${unitWidth - 10}" height="${unitHeight - 10}" rx="8" fill="rgba(255,255,255,0)" />
+          <rect x="${x}" y="${y}" width="${unitWidth - 10}" height="${unitHeight - 10}" rx="${borderRadius}" fill="rgba(255,255,255,0)" />
           <text x="${numX}" y="${numY}" dominant-baseline="middle" text-anchor="middle" font-family="${escapeHtml(
             fontFamily
       )}" font-size="${fontSize}" fill="#${color}">${pad(u.value)}</text>
@@ -100,11 +102,16 @@ export async function GET(req: Request) {
     content = `${titleEl}\n<g transform="translate(0,${title ? titleSize + 20 : 20})">${items.join('\n')}</g>`
   }
 
-  const bgEl = gradient
-    ? `<defs><linearGradient id="g1" x1="0%" x2="100%"><stop offset="0%" stop-color="#${
-        (gradient || '').split(',')[0] || 'ffffff'
-      }"/><stop offset="100%" stop-color="#${(gradient || '').split(',')[1] || '000000'}"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#g1)"/>`
-    : `<rect width="100%" height="100%" fill="#${bg}"/>`
+  let bgEl = '';
+  if (image) {
+    bgEl = `<image href="${escapeHtml(image)}" x="0" y="0" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" />`;
+  } else if (gradient) {
+    bgEl = `<defs><linearGradient id="g1" x1="0%" x2="100%"><stop offset="0%" stop-color="#${
+      (gradient || '').split(',')[0] || 'ffffff'
+    }"/><stop offset="100%" stop-color="#${(gradient || '').split(',')[1] || '000000'}"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#g1)"/>`;
+  } else {
+    bgEl = `<rect width="100%" height="100%" fill="#${bg}"/>`;
+  }
 
   const svg = `<?xml version="1.0" encoding="UTF-8"?>\n  <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">\n    ${bgEl}\n    ${content}\n  </svg>`
 
