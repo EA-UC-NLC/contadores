@@ -94,6 +94,7 @@ export default function FormGenerator() {
         flexDirection: 'column',
         gap: 14,
         alignItems: 'stretch',
+        boxSizing: 'border-box',
       }} onSubmit={e => e.preventDefault()}>
         <h2 style={{
           color: KREATOR_COLORS.primary,
@@ -176,6 +177,7 @@ export default function FormGenerator() {
           alignItems: 'center',
           boxShadow: `0 2px 12px 0 ${KREATOR_COLORS.dark}22`,
           padding: 16,
+          boxSizing: 'border-box',
         }}>
           <img src={url} alt="Contador regresivo" width={width} height={height} style={{ display: 'block', maxWidth: '100%', height: 'auto', background: KREATOR_COLORS.gray, border: 'none', borderRadius: 0, boxShadow: `0 1px 8px 0 ${KREATOR_COLORS.dark}22` }} />
         </div>
