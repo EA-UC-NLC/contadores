@@ -38,7 +38,6 @@ export default function FormGenerator() {
   const [gradient2, setGradient2] = useState("#0072ff");
   const [useGradient, setUseGradient] = useState(false);
   const [imageUrl, setImageUrl] = useState(""); // para imagen temporal
-  const [borderRadius, setBorderRadius] = useState(16);
   const [showDays, setShowDays] = useState(true);
   const [showHours, setShowHours] = useState(true);
   const [showMinutes, setShowMinutes] = useState(true);
@@ -51,7 +50,7 @@ export default function FormGenerator() {
   const gradientParam = useGradient ? `&gradient=${encodeURIComponent(gradient1.replace('#',''))},${encodeURIComponent(gradient2.replace('#',''))}` : '';
   const url = `/api/countdown?date=${encodeURIComponent(
     date
-  )}&title=${encodeURIComponent(title)}&bg=${bg.replace('#','')}&color=${color.replace('#','')}&width=${width}&height=${height}&font=${encodeURIComponent(font)}${gradientParam}${imageUrl ? `&image=${encodeURIComponent(imageUrl)}` : ''}&borderRadius=${borderRadius}&showDays=${showDays}&showHours=${showHours}&showMinutes=${showMinutes}&showSeconds=${showSeconds}&bold=${bold}&italic=${italic}&justify=${justify}`;
+  )}&title=${encodeURIComponent(title)}&bg=${bg.replace('#','')}&color=${color.replace('#','')}&width=${width}&height=${height}&font=${encodeURIComponent(font)}${gradientParam}${imageUrl ? `&image=${encodeURIComponent(imageUrl)}` : ''}&showDays=${showDays}&showHours=${showHours}&showMinutes=${showMinutes}&showSeconds=${showSeconds}&bold=${bold}&italic=${italic}&justify=${justify}`;
   const htmlSnippet = `<img src="https://contadores-sigma.vercel.app${url}" alt="Contador regresivo" width="${width}">`;
 
   return (
@@ -69,7 +68,7 @@ export default function FormGenerator() {
         borderRadius: 18,
         boxShadow: `0 4px 24px 0 ${KREATOR_COLORS.dark}33`,
         padding: 36,
-        maxWidth: 440,
+        maxWidth: 480,
         width: '100%',
         margin: '32px auto',
         border: `2px solid ${KREATOR_COLORS.primary}`,
@@ -139,9 +138,6 @@ export default function FormGenerator() {
         <label style={{ fontWeight: 600, marginBottom: 2 }}>Imagen de fondo (URL temporal):
           <input type="text" value={imageUrl} onChange={e => setImageUrl(e.target.value)} placeholder="https://..." style={{ width: '100%', padding: 8, borderRadius: 6, border: `1.5px solid ${KREATOR_COLORS.gray}` }} />
         </label>
-        <label style={{ fontWeight: 600, marginBottom: 2 }}>Radio de borde (px):
-          <input type="number" min={0} max={100} value={borderRadius} onChange={e => setBorderRadius(Number(e.target.value))} style={{ width: '100%', padding: 8, borderRadius: 6, border: `1.5px solid ${KREATOR_COLORS.gray}` }} />
-        </label>
         <fieldset style={{ margin: '0 0 4px 0', border: `1.5px solid ${KREATOR_COLORS.gray}`, padding: 8, borderRadius: 8, background: '#fafafa' }}>
           <legend style={{ color: KREATOR_COLORS.primary, fontWeight: 600 }}>Mostrar unidades:</legend>
           <label style={{ marginRight: 8 }}><input type="checkbox" checked={showDays} onChange={e => setShowDays(e.target.checked)} /> Días</label>
@@ -150,7 +146,21 @@ export default function FormGenerator() {
           <label><input type="checkbox" checked={showSeconds} onChange={e => setShowSeconds(e.target.checked)} /> Segundos</label>
         </fieldset>
         <h2 style={{ color: KREATOR_COLORS.primary, marginTop: 24, fontSize: 20, textAlign: 'center' }}>Vista previa:</h2>
-        <img src={url} alt="Contador regresivo" width={width} height={height} style={{ border: `2px solid ${KREATOR_COLORS.gold}`, borderRadius: 12, marginBottom: 20, display: 'block', background: KREATOR_COLORS.gray, marginLeft: 'auto', marginRight: 'auto' }} />
+        <div style={{
+          width: '100%',
+          maxWidth: 400,
+          margin: '0 auto 20px auto',
+          overflowX: 'auto',
+          background: KREATOR_COLORS.gray,
+          border: `2px solid ${KREATOR_COLORS.gold}`,
+          borderRadius: 12,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: 80
+        }}>
+          <img src={url} alt="Contador regresivo" width={width} height={height} style={{ display: 'block', maxWidth: '100%', height: 'auto', background: KREATOR_COLORS.gray, border: 'none', borderRadius: 0 }} />
+        </div>
         <h2 style={{ color: KREATOR_COLORS.primary, fontSize: 18, textAlign: 'center' }}>HTML para HubSpot:</h2>
         <div style={{ position: 'relative', marginBottom: 8 }}>
           <textarea style={{width:'100%',height:60, border: `1.5px solid ${KREATOR_COLORS.gray}`, borderRadius: 6, fontFamily: 'monospace', fontSize: 15, background: KREATOR_COLORS.light, color: KREATOR_COLORS.dark, padding: 8 }} readOnly value={htmlSnippet} />
