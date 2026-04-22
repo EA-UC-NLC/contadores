@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 
 export const metadata: Metadata = {
   title: "Contador Regresivo | Blackhole Edition",
@@ -13,7 +14,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="es">
       <body style={{ margin: 0, background: '#181818' }}>
