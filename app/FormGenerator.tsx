@@ -53,22 +53,26 @@ export default function FormGenerator() {
   )}&title=${encodeURIComponent(title)}&bg=${bg.replace('#','')}&color=${color.replace('#','')}&width=${width}&height=${height}&font=${encodeURIComponent(font)}${gradientParam}${imageUrl ? `&image=${encodeURIComponent(imageUrl)}` : ''}&showDays=${showDays}&showHours=${showHours}&showMinutes=${showMinutes}&showSeconds=${showSeconds}&bold=${bold}&italic=${italic}&justify=${justify}`;
   const htmlSnippet = `<img src="https://contadores-sigma.vercel.app${url}" alt="Contador regresivo" width="${width}">`;
 
+  // Calcular el ancho máximo para el formulario y la vista previa
+  const previewMaxWidth = Math.max(420, Math.min(Number(width), 700));
+
   return (
     <div style={{
       width: '100%',
+      minHeight: '70vh',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      minHeight: '70vh',
       background: 'none',
+      padding: '32px 0',
     }}>
       <form style={{
         background: KREATOR_COLORS.light,
         borderRadius: 18,
         boxShadow: `0 4px 24px 0 ${KREATOR_COLORS.dark}33`,
         padding: 36,
-        maxWidth: 480,
+        maxWidth: previewMaxWidth,
         width: '100%',
         margin: '32px auto',
         border: `2px solid ${KREATOR_COLORS.primary}`,
@@ -77,7 +81,8 @@ export default function FormGenerator() {
         fontSize: 17,
         display: 'flex',
         flexDirection: 'column',
-        gap: 18
+        gap: 18,
+        alignItems: 'center',
       }} onSubmit={e => e.preventDefault()}>
         <h2 style={{
           color: KREATOR_COLORS.primary,
@@ -148,18 +153,20 @@ export default function FormGenerator() {
         <h2 style={{ color: KREATOR_COLORS.primary, marginTop: 24, fontSize: 20, textAlign: 'center' }}>Vista previa:</h2>
         <div style={{
           width: '100%',
-          maxWidth: 400,
+          maxWidth: previewMaxWidth,
+          minHeight: 80,
           margin: '0 auto 20px auto',
           overflowX: 'auto',
-          background: KREATOR_COLORS.gray,
+          background: `linear-gradient(135deg, ${KREATOR_COLORS.gray} 0%, #fff 100%)`,
           border: `2px solid ${KREATOR_COLORS.gold}`,
-          borderRadius: 12,
+          borderRadius: 16,
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          minHeight: 80
+          boxShadow: `0 2px 12px 0 ${KREATOR_COLORS.dark}22`,
+          padding: 24,
         }}>
-          <img src={url} alt="Contador regresivo" width={width} height={height} style={{ display: 'block', maxWidth: '100%', height: 'auto', background: KREATOR_COLORS.gray, border: 'none', borderRadius: 0 }} />
+          <img src={url} alt="Contador regresivo" width={width} height={height} style={{ display: 'block', maxWidth: '100%', height: 'auto', background: KREATOR_COLORS.gray, border: 'none', borderRadius: 0, boxShadow: `0 1px 8px 0 ${KREATOR_COLORS.dark}22` }} />
         </div>
         <h2 style={{ color: KREATOR_COLORS.primary, fontSize: 18, textAlign: 'center' }}>HTML para HubSpot:</h2>
         <div style={{ position: 'relative', marginBottom: 8 }}>
