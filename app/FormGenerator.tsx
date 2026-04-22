@@ -11,6 +11,12 @@ const FONT_OPTIONS = [
   { label: "Impact", value: "Impact, Charcoal, sans-serif" },
 ];
 
+const JUSTIFY_OPTIONS = [
+  { label: "Izquierda", value: "start" },
+  { label: "Centro", value: "middle" },
+  { label: "Derecha", value: "end" },
+];
+
 export default function FormGenerator() {
   const [date, setDate] = useState("2026-12-25T00:00:00");
   const [title, setTitle] = useState("Navidad");
@@ -19,17 +25,23 @@ export default function FormGenerator() {
   const [width, setWidth] = useState("600");
   const [height, setHeight] = useState("200");
   const [font, setFont] = useState(FONT_OPTIONS[0].value);
-  const [gradient, setGradient] = useState(""); // formato: color1,color2
+  const [gradient1, setGradient1] = useState("#1e90ff");
+  const [gradient2, setGradient2] = useState("#0072ff");
+  const [useGradient, setUseGradient] = useState(false);
   const [imageUrl, setImageUrl] = useState(""); // para imagen temporal
   const [borderRadius, setBorderRadius] = useState(16);
   const [showDays, setShowDays] = useState(true);
   const [showHours, setShowHours] = useState(true);
   const [showMinutes, setShowMinutes] = useState(true);
   const [showSeconds, setShowSeconds] = useState(false);
+  const [bold, setBold] = useState(false);
+  const [italic, setItalic] = useState(false);
+  const [justify, setJustify] = useState("middle");
 
+  const gradientParam = useGradient ? `&gradient=${encodeURIComponent(gradient1.replace('#',''))},${encodeURIComponent(gradient2.replace('#',''))}` : '';
   const url = `/api/countdown?date=${encodeURIComponent(
     date
-  )}&title=${encodeURIComponent(title)}&bg=${bg.replace('#','')}&color=${color.replace('#','')}&width=${width}&height=${height}&font=${encodeURIComponent(font)}${gradient ? `&gradient=${encodeURIComponent(gradient)}` : ''}${imageUrl ? `&image=${encodeURIComponent(imageUrl)}` : ''}&borderRadius=${borderRadius}&showDays=${showDays}&showHours=${showHours}&showMinutes=${showMinutes}&showSeconds=${showSeconds}`;
+  )}&title=${encodeURIComponent(title)}&bg=${bg.replace('#','')}&color=${color.replace('#','')}&width=${width}&height=${height}&font=${encodeURIComponent(font)}${gradientParam}${imageUrl ? `&image=${encodeURIComponent(imageUrl)}` : ''}&borderRadius=${borderRadius}&showDays=${showDays}&showHours=${showHours}&showMinutes=${showMinutes}&showSeconds=${showSeconds}&bold=${bold}&italic=${italic}&justify=${justify}`;
   const htmlSnippet = `<img src="https://contadores-sigma.vercel.app${url}" alt="Contador regresivo" width="${width}">`;
 
   return (
@@ -58,8 +70,24 @@ export default function FormGenerator() {
           <option key={opt.value} value={opt.value}>{opt.label}</option>
         ))}
       </select>
-      <label style={{ display: 'block', margin: '12px 0 4px' }}>Gradiente (dos colores hex separados por coma):</label>
-      <input type="text" value={gradient} onChange={e => setGradient(e.target.value)} placeholder="#ff0000,#0000ff" style={{ width: '100%', padding: 6 }} />
+      <div style={{ display: 'flex', gap: 8, alignItems: 'center', margin: '12px 0 4px' }}>
+        <button type="button" style={{ fontWeight: bold ? 'bold' : 'normal', border: '1px solid #ccc', background: '#fff', padding: '4px 8px', cursor: 'pointer' }} onClick={() => setBold(b => !b)}>B</button>
+        <button type="button" style={{ fontStyle: italic ? 'italic' : 'normal', border: '1px solid #ccc', background: '#fff', padding: '4px 8px', cursor: 'pointer' }} onClick={() => setItalic(i => !i)}>I</button>
+        <select value={justify} onChange={e => setJustify(e.target.value)} style={{ padding: 4 }}>
+          {JUSTIFY_OPTIONS.map(opt => (
+            <option key={opt.value} value={opt.value}>{opt.label}</option>
+          ))}
+        </select>
+      </div>
+      <label style={{ display: 'block', margin: '12px 0 4px' }}>Usar gradiente:</label>
+      <input type="checkbox" checked={useGradient} onChange={e => setUseGradient(e.target.checked)} />
+      {useGradient && (
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center', margin: '8px 0' }}>
+          <input type="color" value={gradient1} onChange={e => setGradient1(e.target.value)} />
+          <span style={{ fontWeight: 600 }}>→</span>
+          <input type="color" value={gradient2} onChange={e => setGradient2(e.target.value)} />
+        </div>
+      )}
       <label style={{ display: 'block', margin: '12px 0 4px' }}>Imagen de fondo (URL temporal):</label>
       <input type="text" value={imageUrl} onChange={e => setImageUrl(e.target.value)} placeholder="https://..." style={{ width: '100%', padding: 6 }} />
       <label style={{ display: 'block', margin: '12px 0 4px' }}>Radio de borde (px):</label>
@@ -71,8 +99,6 @@ export default function FormGenerator() {
         <label><input type="checkbox" checked={showMinutes} onChange={e => setShowMinutes(e.target.checked)} /> Minutos</label>{' '}
         <label><input type="checkbox" checked={showSeconds} onChange={e => setShowSeconds(e.target.checked)} /> Segundos</label>
       </fieldset>
-      <h2>Vista previa:</h2>
-      <img src={url} alt="Contador regresivo" width={width} height={height} style={{border:'1px solid #ccc',marginBottom:20}} />
       <h2>HTML para HubSpot:</h2>
       <textarea style={{width:'100%',height:60}} readOnly value={htmlSnippet} />
       <p>Pega este código en un módulo HTML personalizado en HubSpot.</p>

@@ -27,6 +27,9 @@ export async function GET(req: Request) {
   const showMinutes = p.get('showMinutes') !== 'false'
   const showSeconds = p.get('showSeconds') !== 'false'
   const layout = p.get('layout') || 'horizontal'
+  const bold = p.get('bold') === 'true';
+  const italic = p.get('italic') === 'true';
+  const justify = p.get('justify') || 'middle';
   const borderRadius = Number(p.get('borderRadius') || 16)
   const separator = p.get('separator') !== 'false'
   const expiredMsg = p.get('expiredMsg') || (lang === 'es' ? 'Evento finalizado' : 'Event ended')
@@ -95,9 +98,13 @@ export async function GET(req: Request) {
       }
     })
 
-    const titleEl = title ? `<text x="50%" y="${titleSize + 10}" dominant-baseline="hanging" text-anchor="middle" font-family="${escapeHtml(
+    const fontWeight = bold ? 'bold' : 'normal';
+    const fontStyle = italic ? 'italic' : 'normal';
+    const anchor = justify;
+    const anchorX = justify === 'start' ? '5%' : justify === 'end' ? '95%' : '50%';
+    const titleEl = title ? `<text x="${anchorX}" y="${titleSize + 10}" dominant-baseline="hanging" text-anchor="${anchor}" font-family="${escapeHtml(
       fontFamily
-    )}" font-size="${titleSize}" fill="#${color}">${escapeHtml(title)}</text>` : ''
+    )}" font-size="${titleSize}" fill="#${color}" font-weight="${fontWeight}" font-style="${fontStyle}">${escapeHtml(title)}</text>` : ''
 
     content = `${titleEl}\n<g transform="translate(0,${title ? titleSize + 20 : 20})">${items.join('\n')}</g>`
   }
