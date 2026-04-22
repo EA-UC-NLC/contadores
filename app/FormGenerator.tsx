@@ -37,6 +37,7 @@ export default function FormGenerator() {
   const [bold, setBold] = useState(false);
   const [italic, setItalic] = useState(false);
   const [justify, setJustify] = useState("middle");
+  const [copied, setCopied] = useState(false);
 
   const gradientParam = useGradient ? `&gradient=${encodeURIComponent(gradient1.replace('#',''))},${encodeURIComponent(gradient2.replace('#',''))}` : '';
   const url = `/api/countdown?date=${encodeURIComponent(
@@ -100,8 +101,38 @@ export default function FormGenerator() {
         <label><input type="checkbox" checked={showSeconds} onChange={e => setShowSeconds(e.target.checked)} /> Segundos</label>
       </fieldset>
       <h2>HTML para HubSpot:</h2>
-      <textarea style={{width:'100%',height:60}} readOnly value={htmlSnippet} />
+      <div style={{ position: 'relative', marginBottom: 8 }}>
+        <textarea style={{width:'100%',height:60}} readOnly value={htmlSnippet} />
+        <button
+          type="button"
+          onClick={() => {
+            navigator.clipboard.writeText(htmlSnippet);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 1500);
+          }}
+          style={{
+            position: 'absolute',
+            top: 8,
+            right: 8,
+            background: copied ? '#4caf50' : '#f5f5f5',
+            color: copied ? '#fff' : '#333',
+            border: '1px solid #ccc',
+            borderRadius: 4,
+            padding: '4px 10px',
+            cursor: 'pointer',
+            fontWeight: 600,
+            transition: 'background 0.2s, color 0.2s',
+            zIndex: 2
+          }}
+          aria-label="Copiar código"
+        >
+          {copied ? '¡Copiado!' : 'Copiar'}
+        </button>
+      </div>
       <p>Pega este código en un módulo HTML personalizado en HubSpot.</p>
+
+      <h2>Vista previa:</h2>
+      <img src={url} alt="Contador regresivo" width={width} height={height} style={{ border: '1px solid #ccc', marginBottom: 20, display: 'block' }} />
     </form>
   );
 }
