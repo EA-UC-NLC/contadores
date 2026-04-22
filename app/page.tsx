@@ -1,9 +1,6 @@
 export default function Page() {
   const url =
-    typeof window !== 'undefined'
-      ? window.location.origin +
-        '/api/countdown?date=2026-12-25T00:00:00&title=Navidad&bg=ffffff&color=000000&width=600&height=200'
-      : '/api/countdown?date=2026-12-25T00:00:00&title=Navidad&bg=ffffff&color=000000&width=600&height=200';
+    'https://contadores-sigma.vercel.app/api/countdown?date=2026-12-25T00:00:00&title=Navidad&bg=ffffff&color=000000&width=600&height=200';
 
   const htmlSnippet = `<img src="${url}" alt="Contador regresivo" width="600">`;
 
