@@ -1,7 +1,1 @@
-{
-  "functions": {
-    "app/api/countdown.svg/route.ts": {
-      "runtime": "edge"
-    }
-  }
-}
+{}
