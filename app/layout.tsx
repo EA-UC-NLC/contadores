@@ -17,7 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </Head>
       <body style={{ margin: 0, background: '#181818' }}>
         <header style={{ width: '100%', background: '#c20000', color: '#fff', padding: '18px 0 12px 0', textAlign: 'center', letterSpacing: 2, fontWeight: 700, fontSize: 22, fontFamily: 'Arial Rounded MT Bold, Arial, sans-serif', boxShadow: '0 2px 8px #0002' }}>
-          <span style={{ filter: 'drop-shadow(0 1px 2px #0008)' }}>Contador Regresivo</span>
+          {/* Header vacío para margen visual */}
         </header>
         <main style={{ minHeight: '80vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
           {children}
