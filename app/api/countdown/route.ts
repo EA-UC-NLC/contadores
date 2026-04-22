@@ -1,5 +1,3 @@
-import { DateTime } from 'luxon'
-
 export const runtime = 'edge'
 
 function pad(n: number) {
@@ -34,20 +32,23 @@ export async function GET(req: Request) {
   const timezone = p.get('timezone') || 'America/Santiago'
   const gradient = p.get('gradient')
 
-  const target = DateTime.fromISO(dateParam, { zone: timezone })
-  const now = DateTime.now().setZone(timezone)
-  let diff = target.diff(now, ['days', 'hours', 'minutes', 'seconds']).toObject() as any
-
-  const expired = now > target
+  // Usar Date nativo en vez de luxon
+  const target = new Date(dateParam)
+  const now = new Date()
+  
+  // Calcular diferencia en milisegundos
+  const diffMs = target.getTime() - now.getTime()
+  const expired = diffMs <= 0
 
   const labels_es = { days: 'días', hours: 'horas', minutes: 'minutos', seconds: 'segundos' }
   const labels_en = { days: 'days', hours: 'hours', minutes: 'minutes', seconds: 'seconds' }
   const labels = lang === 'es' ? labels_es : labels_en
 
-  const days = Math.max(0, Math.floor(diff.days || 0))
-  const hours = Math.max(0, Math.floor(diff.hours || 0))
-  const minutes = Math.max(0, Math.floor(diff.minutes || 0))
-  const seconds = Math.max(0, Math.floor(diff.seconds || 0))
+  // Calcular días, horas, minutos, segundos
+  const days = Math.max(0, Math.floor(diffMs / (1000 * 60 * 60 * 24)))
+  const hours = Math.max(0, Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)))
+  const minutes = Math.max(0, Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60)))
+  const seconds = Math.max(0, Math.floor((diffMs % (1000 * 60)) / 1000))
 
   let content = ''
   if (expired) {
