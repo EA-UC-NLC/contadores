@@ -1,4 +1,6 @@
 import { cookies } from 'next/headers';
+import dynamic from "next/dynamic";
+const FormGenerator = dynamic(() => import("./FormGenerator"), { ssr: false });
 
 function getParam(searchParams: URLSearchParams, key: string, def: string) {
   return searchParams.get(key) || def;
@@ -20,27 +22,7 @@ export default function Page({ searchParams }: { searchParams?: { [key: string]:
   return (
     <div style={{ fontFamily: 'Arial, sans-serif', padding: '40px', maxWidth: 700, margin: '0 auto' }}>
       <h1>Contador Regresivo</h1>
-      <form method="get" style={{ marginBottom: 24, background: '#f9f9f9', padding: 16, borderRadius: 8 }}>
-        <label>Fecha objetivo:<br/>
-          <input type="datetime-local" name="date" defaultValue={date.slice(0, 16)} style={{ marginBottom: 8 }} />
-        </label><br/>
-        <label>Título:<br/>
-          <input name="title" defaultValue={title} style={{ marginBottom: 8 }} />
-        </label><br/>
-        <label>Fondo:<br/>
-          <input type="color" name="bg" defaultValue={`#${bg}`} style={{ marginBottom: 8 }} />
-        </label><br/>
-        <label>Color texto:<br/>
-          <input type="color" name="color" defaultValue={`#${color}`} style={{ marginBottom: 8 }} />
-        </label><br/>
-        <label>Ancho:<br/>
-          <input type="number" name="width" defaultValue={width} min={100} max={1200} style={{ marginBottom: 8 }} /> px
-        </label><br/>
-        <label>Alto:<br/>
-          <input type="number" name="height" defaultValue={height} min={50} max={600} style={{ marginBottom: 8 }} /> px
-        </label><br/>
-        <button type="submit">Actualizar vista previa</button>
-      </form>
+      <FormGenerator />
       <h2>Vista previa:</h2>
       <img src={url} alt="Contador regresivo" width={width} height={height} style={{ border: '1px solid #ccc', marginBottom: 20 }} />
       <h2>HTML para HubSpot:</h2>
