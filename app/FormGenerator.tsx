@@ -56,89 +56,102 @@ export default function FormGenerator() {
 
   return (
     <div style={{
-      background: `linear-gradient(135deg, ${KREATOR_COLORS.dark} 0%, ${KREATOR_COLORS.primary} 100%)`,
-      minHeight: '100vh',
+      width: '100%',
       display: 'flex',
+      flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: 0
+      minHeight: '70vh',
+      background: 'none',
     }}>
       <form style={{
         background: KREATOR_COLORS.light,
         borderRadius: 18,
         boxShadow: `0 4px 24px 0 ${KREATOR_COLORS.dark}33`,
-        padding: 32,
-        maxWidth: 420,
+        padding: 36,
+        maxWidth: 440,
         width: '100%',
-        margin: 32,
+        margin: '32px auto',
         border: `2px solid ${KREATOR_COLORS.primary}`,
         color: KREATOR_COLORS.dark,
         fontFamily: 'Arial Rounded MT Bold, Arial, sans-serif',
-        fontSize: 17
+        fontSize: 17,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 18
       }} onSubmit={e => e.preventDefault()}>
         <h2 style={{
           color: KREATOR_COLORS.primary,
           textAlign: 'center',
-          marginBottom: 24,
+          marginBottom: 10,
           letterSpacing: 1.5,
-          fontWeight: 700
+          fontWeight: 700,
+          fontSize: 24
         }}>Generador de Contadores</h2>
-        <label>Fecha objetivo:<br/>
-          <input type="datetime-local" value={date.slice(0,16)} onChange={e=>setDate(e.target.value)} style={{marginBottom:8}} />
-        </label><br/>
-        <label>Título:<br/>
-          <input value={title} onChange={e=>setTitle(e.target.value)} style={{marginBottom:8}} />
-        </label><br/>
-        <label>Fondo:<br/>
-          <input type="color" value={`#${bg}`} onChange={e=>setBg(e.target.value.replace('#',''))} style={{marginBottom:8}} />
-        </label><br/>
-        <label>Color texto:<br/>
-          <input type="color" value={`#${color}`} onChange={e=>setColor(e.target.value.replace('#',''))} style={{marginBottom:8}} />
-        </label><br/>
-        <label>Ancho:<br/>
-          <input type="number" value={width} min={100} max={1200} onChange={e=>setWidth(e.target.value)} style={{marginBottom:8}} /> px
-        </label><br/>
-        <label>Alto:<br/>
-          <input type="number" value={height} min={50} max={600} onChange={e=>setHeight(e.target.value)} style={{marginBottom:8}} /> px
-        </label><br/>
-        <label style={{ display: 'block', margin: '12px 0 4px' }}>Fuente:</label>
-        <select value={font} onChange={e => setFont(e.target.value)} style={{ width: '100%', padding: 6 }}>
-          {FONT_OPTIONS.map(opt => (
-            <option key={opt.value} value={opt.value}>{opt.label}</option>
-          ))}
-        </select>
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center', margin: '12px 0 4px' }}>
-          <button type="button" style={{ fontWeight: bold ? 'bold' : 'normal', border: '1px solid #ccc', background: '#fff', padding: '4px 8px', cursor: 'pointer' }} onClick={() => setBold(b => !b)}>B</button>
-          <button type="button" style={{ fontStyle: italic ? 'italic' : 'normal', border: '1px solid #ccc', background: '#fff', padding: '4px 8px', cursor: 'pointer' }} onClick={() => setItalic(i => !i)}>I</button>
-          <select value={justify} onChange={e => setJustify(e.target.value)} style={{ padding: 4 }}>
+        <label style={{ fontWeight: 600, marginBottom: 2 }}>Fecha objetivo:
+          <input type="datetime-local" value={date.slice(0,16)} onChange={e=>setDate(e.target.value)} style={{marginTop:4, marginBottom:8, width:'100%', padding:8, borderRadius:6, border:`1.5px solid ${KREATOR_COLORS.gray}`}} />
+        </label>
+        <label style={{ fontWeight: 600, marginBottom: 2 }}>Título:
+          <input value={title} onChange={e=>setTitle(e.target.value)} style={{marginTop:4, marginBottom:8, width:'100%', padding:8, borderRadius:6, border:`1.5px solid ${KREATOR_COLORS.gray}`}} />
+        </label>
+        <div style={{ display: 'flex', gap: 12 }}>
+          <label style={{ fontWeight: 600, flex: 1 }}>Fondo:
+            <input type="color" value={`#${bg}`} onChange={e=>setBg(e.target.value.replace('#',''))} style={{marginTop:4, width:'100%', height:36, border:'none', background:'none'}} />
+          </label>
+          <label style={{ fontWeight: 600, flex: 1 }}>Color texto:
+            <input type="color" value={`#${color}`} onChange={e=>setColor(e.target.value.replace('#',''))} style={{marginTop:4, width:'100%', height:36, border:'none', background:'none'}} />
+          </label>
+        </div>
+        <div style={{ display: 'flex', gap: 12 }}>
+          <label style={{ fontWeight: 600, flex: 1 }}>Ancho:
+            <input type="number" value={width} min={100} max={1200} onChange={e=>setWidth(e.target.value)} style={{marginTop:4, width:'100%', padding:8, borderRadius:6, border:`1.5px solid ${KREATOR_COLORS.gray}`}} />
+          </label>
+          <label style={{ fontWeight: 600, flex: 1 }}>Alto:
+            <input type="number" value={height} min={50} max={600} onChange={e=>setHeight(e.target.value)} style={{marginTop:4, width:'100%', padding:8, borderRadius:6, border:`1.5px solid ${KREATOR_COLORS.gray}`}} />
+          </label>
+        </div>
+        <label style={{ fontWeight: 600, marginBottom: 2 }}>Fuente:
+          <select value={font} onChange={e => setFont(e.target.value)} style={{ width: '100%', padding: 8, borderRadius: 6, border: `1.5px solid ${KREATOR_COLORS.gray}` }}>
+            {FONT_OPTIONS.map(opt => (
+              <option key={opt.value} value={opt.value}>{opt.label}</option>
+            ))}
+          </select>
+        </label>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center', margin: '0 0 4px 0', justifyContent: 'center' }}>
+          <button type="button" style={{ fontWeight: bold ? 'bold' : 'normal', border: `1.5px solid ${KREATOR_COLORS.gray}`, background: '#fff', padding: '4px 12px', cursor: 'pointer', borderRadius: 4, fontSize: 16, color: KREATOR_COLORS.primary }} onClick={() => setBold(b => !b)}>B</button>
+          <button type="button" style={{ fontStyle: italic ? 'italic' : 'normal', border: `1.5px solid ${KREATOR_COLORS.gray}`, background: '#fff', padding: '4px 12px', cursor: 'pointer', borderRadius: 4, fontSize: 16, color: KREATOR_COLORS.primary }} onClick={() => setItalic(i => !i)}>I</button>
+          <select value={justify} onChange={e => setJustify(e.target.value)} style={{ padding: 6, borderRadius: 4, border: `1.5px solid ${KREATOR_COLORS.gray}` }}>
             {JUSTIFY_OPTIONS.map(opt => (
               <option key={opt.value} value={opt.value}>{opt.label}</option>
             ))}
           </select>
         </div>
-        <label style={{ display: 'block', margin: '12px 0 4px' }}>Usar gradiente:</label>
-        <input type="checkbox" checked={useGradient} onChange={e => setUseGradient(e.target.checked)} />
+        <label style={{ fontWeight: 600, marginBottom: 2 }}>Usar gradiente:
+          <input type="checkbox" checked={useGradient} onChange={e => setUseGradient(e.target.checked)} style={{ marginLeft: 8 }} />
+        </label>
         {useGradient && (
-          <div style={{ display: 'flex', gap: 8, alignItems: 'center', margin: '8px 0' }}>
-            <input type="color" value={gradient1} onChange={e => setGradient1(e.target.value)} />
-            <span style={{ fontWeight: 600 }}>→</span>
-            <input type="color" value={gradient2} onChange={e => setGradient2(e.target.value)} />
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center', margin: '8px 0', justifyContent: 'center' }}>
+            <input type="color" value={gradient1} onChange={e => setGradient1(e.target.value)} style={{ width: 36, height: 36, border: 'none', background: 'none' }} />
+            <span style={{ fontWeight: 600, color: KREATOR_COLORS.primary }}>→</span>
+            <input type="color" value={gradient2} onChange={e => setGradient2(e.target.value)} style={{ width: 36, height: 36, border: 'none', background: 'none' }} />
           </div>
         )}
-        <label style={{ display: 'block', margin: '12px 0 4px' }}>Imagen de fondo (URL temporal):</label>
-        <input type="text" value={imageUrl} onChange={e => setImageUrl(e.target.value)} placeholder="https://..." style={{ width: '100%', padding: 6 }} />
-        <label style={{ display: 'block', margin: '12px 0 4px' }}>Radio de borde (px):</label>
-        <input type="number" min={0} max={100} value={borderRadius} onChange={e => setBorderRadius(Number(e.target.value))} style={{ width: '100%', padding: 6 }} />
-        <fieldset style={{ margin: '12px 0 4px', border: '1px solid #ccc', padding: 8 }}>
-          <legend>Mostrar unidades:</legend>
-          <label><input type="checkbox" checked={showDays} onChange={e => setShowDays(e.target.checked)} /> Días</label>{' '}
-          <label><input type="checkbox" checked={showHours} onChange={e => setShowHours(e.target.checked)} /> Horas</label>{' '}
-          <label><input type="checkbox" checked={showMinutes} onChange={e => setShowMinutes(e.target.checked)} /> Minutos</label>{' '}
+        <label style={{ fontWeight: 600, marginBottom: 2 }}>Imagen de fondo (URL temporal):
+          <input type="text" value={imageUrl} onChange={e => setImageUrl(e.target.value)} placeholder="https://..." style={{ width: '100%', padding: 8, borderRadius: 6, border: `1.5px solid ${KREATOR_COLORS.gray}` }} />
+        </label>
+        <label style={{ fontWeight: 600, marginBottom: 2 }}>Radio de borde (px):
+          <input type="number" min={0} max={100} value={borderRadius} onChange={e => setBorderRadius(Number(e.target.value))} style={{ width: '100%', padding: 8, borderRadius: 6, border: `1.5px solid ${KREATOR_COLORS.gray}` }} />
+        </label>
+        <fieldset style={{ margin: '0 0 4px 0', border: `1.5px solid ${KREATOR_COLORS.gray}`, padding: 8, borderRadius: 8, background: '#fafafa' }}>
+          <legend style={{ color: KREATOR_COLORS.primary, fontWeight: 600 }}>Mostrar unidades:</legend>
+          <label style={{ marginRight: 8 }}><input type="checkbox" checked={showDays} onChange={e => setShowDays(e.target.checked)} /> Días</label>
+          <label style={{ marginRight: 8 }}><input type="checkbox" checked={showHours} onChange={e => setShowHours(e.target.checked)} /> Horas</label>
+          <label style={{ marginRight: 8 }}><input type="checkbox" checked={showMinutes} onChange={e => setShowMinutes(e.target.checked)} /> Minutos</label>
           <label><input type="checkbox" checked={showSeconds} onChange={e => setShowSeconds(e.target.checked)} /> Segundos</label>
         </fieldset>
-        <h2 style={{ color: KREATOR_COLORS.primary, marginTop: 32, fontSize: 20 }}>Vista previa:</h2>
-        <img src={url} alt="Contador regresivo" width={width} height={height} style={{ border: `2px solid ${KREATOR_COLORS.gold}`, borderRadius: 12, marginBottom: 20, display: 'block', background: KREATOR_COLORS.gray }} />
-        <h2 style={{ color: KREATOR_COLORS.primary, fontSize: 18 }}>HTML para HubSpot:</h2>
+        <h2 style={{ color: KREATOR_COLORS.primary, marginTop: 24, fontSize: 20, textAlign: 'center' }}>Vista previa:</h2>
+        <img src={url} alt="Contador regresivo" width={width} height={height} style={{ border: `2px solid ${KREATOR_COLORS.gold}`, borderRadius: 12, marginBottom: 20, display: 'block', background: KREATOR_COLORS.gray, marginLeft: 'auto', marginRight: 'auto' }} />
+        <h2 style={{ color: KREATOR_COLORS.primary, fontSize: 18, textAlign: 'center' }}>HTML para HubSpot:</h2>
         <div style={{ position: 'relative', marginBottom: 8 }}>
           <textarea style={{width:'100%',height:60, border: `1.5px solid ${KREATOR_COLORS.gray}`, borderRadius: 6, fontFamily: 'monospace', fontSize: 15, background: KREATOR_COLORS.light, color: KREATOR_COLORS.dark, padding: 8 }} readOnly value={htmlSnippet} />
           <button
