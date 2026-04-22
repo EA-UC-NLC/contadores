@@ -151,17 +151,6 @@ export default function FormGenerator() {
           <label><input type="checkbox" checked={showSeconds} onChange={e => setShowSeconds(e.target.checked)} /> Segundos</label>
         </fieldset>
         <h2 style={{ color: KREATOR_COLORS.primary, marginTop: 24, fontSize: 20, textAlign: 'center' }}>Vista previa:</h2>
-        <ul style={{
-          listStyle: 'disc',
-          color: KREATOR_COLORS.gray,
-          fontSize: 13,
-          margin: '0 0 8px 18px',
-          padding: 0,
-          fontStyle: 'italic',
-          opacity: 0.7,
-        }}>
-          <li>La línea exterior del elemento no se verá reflejada al utilizar el elemento</li>
-        </ul>
         <div style={{
           width: '100%',
           maxWidth: previewMaxWidth,
