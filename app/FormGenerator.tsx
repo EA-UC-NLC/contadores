@@ -46,11 +46,12 @@ export default function FormGenerator() {
   const [italic, setItalic] = useState(false);
   const [justify, setJustify] = useState("middle");
   const [copied, setCopied] = useState(false);
+  const [campaignId, setCampaignId] = useState("");
 
   const gradientParam = useGradient ? `&gradient=${encodeURIComponent(gradient1.replace('#',''))},${encodeURIComponent(gradient2.replace('#',''))}` : '';
   const url = `/api/countdown?date=${encodeURIComponent(
     date
-  )}&title=${encodeURIComponent(title)}&bg=${bg.replace('#','')}&color=${color.replace('#','')}&width=${width}&height=${height}&font=${encodeURIComponent(font)}${gradientParam}${imageUrl ? `&image=${encodeURIComponent(imageUrl)}` : ''}&showDays=${showDays}&showHours=${showHours}&showMinutes=${showMinutes}&showSeconds=${showSeconds}&bold=${bold}&italic=${italic}&justify=${justify}`;
+  )}&title=${encodeURIComponent(title)}&bg=${bg.replace('#','')}&color=${color.replace('#','')}&width=${width}&height=${height}&font=${encodeURIComponent(font)}${gradientParam}${imageUrl ? `&image=${encodeURIComponent(imageUrl)}` : ''}&showDays=${showDays}&showHours=${showHours}&showMinutes=${showMinutes}&showSeconds=${showSeconds}&bold=${bold}&italic=${italic}&justify=${justify}${campaignId.trim() ? `&campaign=${encodeURIComponent(campaignId.trim())}` : ''}`;
   const htmlSnippet = `<img src="https://contadores-sigma.vercel.app${url}" alt="Contador regresivo" width="${width}">`;
 
   // Calcular el ancho máximo para el formulario y la vista previa
@@ -109,6 +110,14 @@ export default function FormGenerator() {
         </label>
         <label style={{ fontWeight: 600, width: '100%' }}>Titulo:
           <input value={title} onChange={e=>setTitle(e.target.value)} style={fieldStyle} />
+        </label>
+        <label style={{ fontWeight: 600, width: '100%' }}>ID de campana (opcional):
+          <input
+            value={campaignId}
+            onChange={e => setCampaignId(e.target.value)}
+            placeholder="ej: MBA-2026-05-06"
+            style={fieldStyle}
+          />
         </label>
         <div style={{ display: 'grid', gap: 12, gridTemplateColumns: '1fr 1fr', width: '100%' }}>
           <label style={{ fontWeight: 600, flex: 1 }}>Fondo:
@@ -212,7 +221,10 @@ export default function FormGenerator() {
             {copied ? '¡Copiado!' : 'Copiar'}
           </button>
         </div>
-        <p style={{ color: KREATOR_COLORS.gray, fontSize: 14, marginBottom: 0, textAlign: 'center' }}>Pega este código en un módulo HTML personalizado en HubSpot.</p>
+        <p style={{ color: KREATOR_COLORS.gray, fontSize: 14, marginBottom: 6, textAlign: 'center' }}>Pega este código en un módulo HTML personalizado en HubSpot.</p>
+        <p style={{ color: KREATOR_COLORS.gray, fontSize: 13, margin: 0, textAlign: 'center' }}>
+          Cada HTML que copies queda independiente. Si creas otro contador, no cambia el anterior.
+        </p>
       </form>
     </div>
   );
