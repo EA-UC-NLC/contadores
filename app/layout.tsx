@@ -4,9 +4,14 @@ import type { ReactNode } from "react";
 export const metadata: Metadata = {
   title: "Contador Regresivo | Blackhole Edition",
   description: "Generador de contadores regresivos SVG para emails",
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.png",
+  },
   openGraph: {
     title: "Contador Regresivo | Blackhole Edition",
-    images: ["/icon.png"],
+    images: ["/favicon.png"],
     url: "https://contadores-sigma.vercel.app/",
   },
 };
