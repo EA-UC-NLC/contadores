@@ -111,7 +111,10 @@ export default function FormGenerator() {
   const url = `/api/countdown?date=${encodeURIComponent(
     date
   )}&title=${encodeURIComponent(title)}&bg=${bg.replace('#','')}&color=${color.replace('#','')}&width=${width}&height=${height}&font=${encodeURIComponent(font)}${gradientParam}${imageUrl ? `&image=${encodeURIComponent(imageUrl)}` : ''}&showDays=${showDays}&showHours=${showHours}&showMinutes=${showMinutes}&showSeconds=${showSeconds}&bold=${bold}&italic=${italic}&justify=${justify}${programSlug ? `&program=${encodeURIComponent(programSlug)}` : ''}`;
-  const htmlSnippet = `<img src="https://contadores-sigma.vercel.app${url}" alt="Contador regresivo" width="${width}">`;
+  const htmlSnippet = programName.trim()
+    ? `<!-- Programa: ${programName} -->
+<img src="https://contadores-sigma.vercel.app${url}" alt="Contador regresivo ${programName}" width="${width}">`
+    : `<img src="https://contadores-sigma.vercel.app${url}" alt="Contador regresivo" width="${width}">`;
 
   // Calcular el ancho máximo para el formulario y la vista previa
   const previewMaxWidth = Math.max(420, Math.min(Number(width), 700));
@@ -256,8 +259,13 @@ export default function FormGenerator() {
             style={fieldStyle}
           />
         </label>
-        <p style={{ color: KREATOR_COLORS.gray, fontSize: 13, margin: '-8px 0 0 0' }}>
-          Se agregara en la URL como referencia legible: {programSlug || 'sin referencia todavia'}
+        {programName.trim() && (
+          <div style={{ background: KREATOR_COLORS.primary, color: '#fff', padding: '8px 12px', borderRadius: 6, textAlign: 'center', fontWeight: 700, fontSize: 14 }}>
+            🔖 Programa: {programName}
+          </div>
+        )}
+        <p style={{ color: KREATOR_COLORS.gray, fontSize: 12, margin: '-4px 0 0 0' }}>
+          En URL: program={programSlug || 'sin programa'}
         </p>
         <div style={{ display: 'grid', gap: 12, gridTemplateColumns: '1fr 1fr', width: '100%' }}>
           <label style={{ fontWeight: 600, flex: 1 }}>Fondo:
