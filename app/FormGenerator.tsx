@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // Paleta Kreator: rojo #c20000, negro #181818, gris #bdbdbd, blanco #fff, dorado #e6b800
 const KREATOR_COLORS = {
@@ -26,6 +26,48 @@ const JUSTIFY_OPTIONS = [
   { label: "Derecha", value: "end" },
 ];
 
+type SavedCounter = {
+  id: string;
+  programName: string;
+  title: string;
+  date: string;
+  htmlSnippet: string;
+  url: string;
+  config: {
+    date: string;
+    title: string;
+    programName: string;
+    bg: string;
+    color: string;
+    width: string;
+    height: string;
+    font: string;
+    gradient1: string;
+    gradient2: string;
+    useGradient: boolean;
+    imageUrl: string;
+    showDays: boolean;
+    showHours: boolean;
+    showMinutes: boolean;
+    showSeconds: boolean;
+    bold: boolean;
+    italic: boolean;
+    justify: string;
+  };
+};
+
+const SAVED_COUNTERS_KEY = "contador-saved-counters";
+
+function toSlug(value: string) {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 60);
+}
+
 export default function FormGenerator() {
   const [date, setDate] = useState("2026-12-25T00:00:00");
   const [title, setTitle] = useState("Navidad");
@@ -46,12 +88,29 @@ export default function FormGenerator() {
   const [italic, setItalic] = useState(false);
   const [justify, setJustify] = useState("middle");
   const [copied, setCopied] = useState(false);
-  const [campaignId, setCampaignId] = useState("");
+  const [programName, setProgramName] = useState("");
+  const [savedCounters, setSavedCounters] = useState<SavedCounter[]>([]);
+  const [saveMessage, setSaveMessage] = useState("");
 
+  useEffect(() => {
+    const rawSavedCounters = window.localStorage.getItem(SAVED_COUNTERS_KEY);
+    if (!rawSavedCounters) {
+      return;
+    }
+
+    try {
+      const parsedCounters = JSON.parse(rawSavedCounters) as SavedCounter[];
+      setSavedCounters(parsedCounters);
+    } catch {
+      window.localStorage.removeItem(SAVED_COUNTERS_KEY);
+    }
+  }, []);
+
+  const programSlug = toSlug(programName);
   const gradientParam = useGradient ? `&gradient=${encodeURIComponent(gradient1.replace('#',''))},${encodeURIComponent(gradient2.replace('#',''))}` : '';
   const url = `/api/countdown?date=${encodeURIComponent(
     date
-  )}&title=${encodeURIComponent(title)}&bg=${bg.replace('#','')}&color=${color.replace('#','')}&width=${width}&height=${height}&font=${encodeURIComponent(font)}${gradientParam}${imageUrl ? `&image=${encodeURIComponent(imageUrl)}` : ''}&showDays=${showDays}&showHours=${showHours}&showMinutes=${showMinutes}&showSeconds=${showSeconds}&bold=${bold}&italic=${italic}&justify=${justify}${campaignId.trim() ? `&campaign=${encodeURIComponent(campaignId.trim())}` : ''}`;
+  )}&title=${encodeURIComponent(title)}&bg=${bg.replace('#','')}&color=${color.replace('#','')}&width=${width}&height=${height}&font=${encodeURIComponent(font)}${gradientParam}${imageUrl ? `&image=${encodeURIComponent(imageUrl)}` : ''}&showDays=${showDays}&showHours=${showHours}&showMinutes=${showMinutes}&showSeconds=${showSeconds}&bold=${bold}&italic=${italic}&justify=${justify}${programSlug ? `&program=${encodeURIComponent(programSlug)}` : ''}`;
   const htmlSnippet = `<img src="https://contadores-sigma.vercel.app${url}" alt="Contador regresivo" width="${width}">`;
 
   // Calcular el ancho máximo para el formulario y la vista previa
@@ -67,6 +126,84 @@ export default function FormGenerator() {
     background: '#fff',
     color: KREATOR_COLORS.dark,
   };
+
+  const secondaryButtonStyle: React.CSSProperties = {
+    border: `1.5px solid ${KREATOR_COLORS.gray}`,
+    background: '#fff',
+    color: KREATOR_COLORS.dark,
+    borderRadius: 8,
+    padding: '8px 12px',
+    fontSize: 14,
+    fontWeight: 700,
+    cursor: 'pointer',
+  };
+
+  function persistSavedCounters(nextSavedCounters: SavedCounter[]) {
+    setSavedCounters(nextSavedCounters);
+    window.localStorage.setItem(SAVED_COUNTERS_KEY, JSON.stringify(nextSavedCounters));
+  }
+
+  function saveCurrentCounter() {
+    const normalizedProgramName = programName.trim() || title.trim() || 'contador';
+    const nextCounter: SavedCounter = {
+      id: `${Date.now()}`,
+      programName: normalizedProgramName,
+      title,
+      date,
+      htmlSnippet,
+      url,
+      config: {
+        date,
+        title,
+        programName: normalizedProgramName,
+        bg,
+        color,
+        width,
+        height,
+        font,
+        gradient1,
+        gradient2,
+        useGradient,
+        imageUrl,
+        showDays,
+        showHours,
+        showMinutes,
+        showSeconds,
+        bold,
+        italic,
+        justify,
+      },
+    };
+
+    const nextSavedCounters = [nextCounter, ...savedCounters].slice(0, 8);
+    persistSavedCounters(nextSavedCounters);
+    setProgramName(normalizedProgramName);
+    setSaveMessage(`Guardado como ${normalizedProgramName}`);
+    window.setTimeout(() => setSaveMessage(''), 1800);
+  }
+
+  function loadSavedCounter(savedCounter: SavedCounter) {
+    const { config } = savedCounter;
+    setDate(config.date);
+    setTitle(config.title);
+    setProgramName(config.programName);
+    setBg(config.bg);
+    setColor(config.color);
+    setWidth(config.width);
+    setHeight(config.height);
+    setFont(config.font);
+    setGradient1(config.gradient1);
+    setGradient2(config.gradient2);
+    setUseGradient(config.useGradient);
+    setImageUrl(config.imageUrl);
+    setShowDays(config.showDays);
+    setShowHours(config.showHours);
+    setShowMinutes(config.showMinutes);
+    setShowSeconds(config.showSeconds);
+    setBold(config.bold);
+    setItalic(config.italic);
+    setJustify(config.justify);
+  }
 
   return (
     <div style={{
@@ -111,14 +248,17 @@ export default function FormGenerator() {
         <label style={{ fontWeight: 600, width: '100%' }}>Titulo:
           <input value={title} onChange={e=>setTitle(e.target.value)} style={fieldStyle} />
         </label>
-        <label style={{ fontWeight: 600, width: '100%' }}>ID de campana (opcional):
+        <label style={{ fontWeight: 600, width: '100%' }}>Programa o referencia:
           <input
-            value={campaignId}
-            onChange={e => setCampaignId(e.target.value)}
-            placeholder="ej: MBA-2026-05-06"
+            value={programName}
+            onChange={e => setProgramName(e.target.value)}
+            placeholder="ej: MBA mayo / MAS mayo"
             style={fieldStyle}
           />
         </label>
+        <p style={{ color: KREATOR_COLORS.gray, fontSize: 13, margin: '-8px 0 0 0' }}>
+          Se agregara en la URL como referencia legible: {programSlug || 'sin referencia todavia'}
+        </p>
         <div style={{ display: 'grid', gap: 12, gridTemplateColumns: '1fr 1fr', width: '100%' }}>
           <label style={{ fontWeight: 600, flex: 1 }}>Fondo:
             <input type="color" value={`#${bg}`} onChange={e=>setBg(e.target.value.replace('#',''))} style={{marginTop:6, width:'100%', height:42, border:'none', background:'none', padding: 0}} />
@@ -221,10 +361,40 @@ export default function FormGenerator() {
             {copied ? '¡Copiado!' : 'Copiar'}
           </button>
         </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+          <button type="button" onClick={saveCurrentCounter} style={secondaryButtonStyle}>
+            Guardar contador
+          </button>
+          <span style={{ color: KREATOR_COLORS.gray, fontSize: 13 }}>{saveMessage || 'Guarda una referencia para reutilizarla despues.'}</span>
+        </div>
         <p style={{ color: KREATOR_COLORS.gray, fontSize: 14, marginBottom: 6, textAlign: 'center' }}>Pega este código en un módulo HTML personalizado en HubSpot.</p>
         <p style={{ color: KREATOR_COLORS.gray, fontSize: 13, margin: 0, textAlign: 'center' }}>
           Cada HTML que copies queda independiente. Si creas otro contador, no cambia el anterior.
         </p>
+        {savedCounters.length > 0 && (
+          <div style={{ marginTop: 10, border: `1.5px solid ${KREATOR_COLORS.gray}`, borderRadius: 8, padding: 14, background: '#fafafa' }}>
+            <h3 style={{ margin: '0 0 10px 0', color: KREATOR_COLORS.primary, fontSize: 18 }}>Contadores guardados</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {savedCounters.map(savedCounter => (
+                <div key={savedCounter.id} style={{ border: `1px solid ${KREATOR_COLORS.gray}`, borderRadius: 8, padding: 10, background: '#fff' }}>
+                  <p style={{ margin: 0, fontWeight: 700 }}>{savedCounter.programName}</p>
+                  <p style={{ margin: '4px 0', fontSize: 13, color: KREATOR_COLORS.gray }}>{savedCounter.title} | {savedCounter.date.slice(0, 16).replace('T', ' ')}</p>
+                  <p style={{ margin: '0 0 8px 0', fontSize: 12, color: KREATOR_COLORS.gray, wordBreak: 'break-all' }}>{savedCounter.url}</p>
+                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                    <button type="button" onClick={() => loadSavedCounter(savedCounter)} style={secondaryButtonStyle}>Cargar</button>
+                    <button
+                      type="button"
+                      onClick={() => navigator.clipboard.writeText(savedCounter.htmlSnippet)}
+                      style={secondaryButtonStyle}
+                    >
+                      Copiar codigo
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </form>
     </div>
   );
